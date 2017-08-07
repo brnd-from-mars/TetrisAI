@@ -1,10 +1,12 @@
 # main.py
 
 
+import gridController
 import viewController
 
 
-viewController = viewController.ViewController( )
+gridController = gridController.GridController( )
+viewController = viewController.ViewController( gridController )
 
 
 while not viewController.abort:
