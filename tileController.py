@@ -14,12 +14,12 @@ class Tile( object ):
 
 class MovableTile( Tile ):
 
-    def __init__( self, layout, identifier, grid ):
+    def __init__( self, layout, identifier, grid, posX):
         Tile.__init__( self, layout, identifier )
-        self.rot = 0
-        self.psX = 0
-        self.psY = 0
         self.grid = grid
+        self.psX = posX
+        self.rot = 0
+        self.psY = 0
 
     def incX( self ):
         rotated = np.rot90( self.layout, self.rot )
@@ -98,6 +98,8 @@ class MovableTile( Tile ):
             for y in range( 20 ):
                 if rendered[ x, y ] != 0:
                     self.grid.apply( x, y, self.identifier )
+        self.grid.removeCompleteRows( )
+
 
 class TileController( object ):
 
@@ -115,4 +117,4 @@ class TileController( object ):
 
     def getRandomTile( self ):
         pattern = self.tileSet[ np.random.random_integers( 0, 6 ) ]
-        return MovableTile( pattern.layout, pattern.identifier, self.grid )
+        return MovableTile( pattern.layout, pattern.identifier, self.grid, 3 )

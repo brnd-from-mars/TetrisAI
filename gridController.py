@@ -15,13 +15,7 @@ class GridController( object ):
 
 
     def checkField( self, psX, psY ):
-        if psX > 9:
-            return False
-        if psX < 0:
-            return False
-        if psY > 19:
-            return False
-        if psY < 0:
+        if psX < 0 or psX > 9 or psY > 19 or psY < 0:
             return False
         if self.grid[ psX, psY ] != 0:
             return False
@@ -32,9 +26,7 @@ class GridController( object ):
 
     def removeCompleteRows( self ):
         for y in range( 19, -1, -1 ):
-            print( y )
             while np.amin( self.grid.T[ y ] ) != 0:
-                print( np.amin( self.grid.T[ y ] ) )
                 for y2 in range( y, 0, -1 ):
                     for x in range( 10 ):
                         self.grid[ x, y2 ] = self.grid[ x, y2-1 ]
