@@ -45,13 +45,12 @@ class MovableTile( Tile ):
                     firstBlock = columnIndex
             if firstBlock != -1:
                 if not self.grid.checkField( self.psX + firstBlock - 1, self.psY + rowIndex ):
-                    return Fale
+                    return False
         self.psX -= 1
         return True
 
     def incY( self ):
         rotated = np.rot90( self.layout, self.rot )
-        print()
         for columnIndex in range( 4 ):
             column = rotated[ columnIndex ]
             lowestBlock = -1
@@ -95,7 +94,7 @@ class MovableTile( Tile ):
 
 class TileController( object ):
 
-    def __init__( self ):
+    def __init__( self, grid ):
         self.tileSet = [
             Tile( [ [1,0,0,0],[1,1,0,0],[1,0,0,0],[0,0,0,0] ], 1 ),
             Tile( [ [0,1,0,0],[0,1,0,0],[0,1,0,0],[0,1,0,0] ], 2 ),
@@ -105,7 +104,8 @@ class TileController( object ):
             Tile( [ [1,1,0,0],[0,1,1,0],[0,0,0,0],[0,0,0,0] ], 6 ),
             Tile( [ [0,0,0,0],[0,1,1,0],[1,1,0,0],[0,0,0,0] ], 7 )
         ]
+        self.grid = grid
 
     def getRandomTile( self ):
         pattern = self.tileSet[ np.random.random_integers( 6 ) ]
-        return MovableTile( pattern.layout, pattern.identifier, gridController )
+        return MovableTile( pattern.layout, pattern.identifier, self.grid )

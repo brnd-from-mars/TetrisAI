@@ -4,7 +4,7 @@
 import pygame as gui
 import numpy as np
 import gridController
-import tile
+import tileController
 
 
 class ViewController( object ):
