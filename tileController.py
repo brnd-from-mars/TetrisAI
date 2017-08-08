@@ -63,6 +63,10 @@ class MovableTile( Tile ):
         self.psY += 1
         return True
 
+    def drop( self ):
+        while self.incY( ):
+            pass
+
     def rotCW( self ):
         rotated = np.rot90( self.layout, ( self.rot + 1 ) % 4 )
         for x in range( 4 ):

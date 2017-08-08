@@ -84,8 +84,8 @@ class ViewController( object ):
                     self.tile.rotACW( )
                 if event.key == gui.K_PERIOD:
                     self.tile.rotCW( )
-
-
+                if event.key == gui.K_RETURN:
+                    self.tile.drop()
 
     def update( self ):
         self.eventCheck( )
