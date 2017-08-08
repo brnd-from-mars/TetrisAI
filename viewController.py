@@ -5,6 +5,7 @@ import pygame as gui
 import numpy as np
 import gridController
 import tileController
+import timeController
 
 
 class ViewController( object ):
@@ -31,6 +32,7 @@ class ViewController( object ):
 
         self.static = gui.Surface( ( 800, 700 ) )
         self.static.set_colorkey( ( 0, 0, 0 ) )
+
         for i in range( 10 ):
             gui.draw.line(self.static, self.lg, ( 30*i+50, 50 ), ( 30*i+50, 650 ) )
             gui.draw.line(self.static, self.lg, ( 50, 30*i+50 ), ( 350, 30*i+50 ), 1+2*(i==4) )
@@ -38,14 +40,21 @@ class ViewController( object ):
         gui.draw.line(self.static, self.lg, ( 350, 50 ), ( 350, 650 ) )
         gui.draw.line(self.static, self.lg, ( 50, 350 ), ( 350, 350 ) )
 
+        gui.draw.line(self.static, self.lg, ( 400, 0 ), ( 400, 700 ), 2 )
+
+        gui.draw.rect(self.static, self.lg, gui.rect.Rect( 450, 50, 300, 30 ), 1 )
+
     def gridCheck( self ):
         grid = self.gridController.grid
         for x in range( 10 ):
             for y in range( 20 ):
-                gui.draw.rect( self.screen, self.segment[ grid[ x, y ]+self.rendered[ x, y ] ], gui.Rect( 30*x+55, 30*y+55, 21, 21 ), 0)
+                gui.draw.rect( self.screen, self.segment[ grid[ x, y ]+self.rendered[ x, y ] ], gui.Rect( 30*x+55, 30*y+55, 21, 21 ), 0 )
 
     def tileCheck( self, tile ):
         self.rendered = tile.render( )
+
+    def timeCheck( self, time ):
+        self.progress = time.getIntvProgress( )
 
     def eventCheck( self, tile ):
         for event in gui.event.get( ):
@@ -69,4 +78,5 @@ class ViewController( object ):
         self.screen.fill( self.dk )
         self.screen.blit( self.static, ( 0, 0 ) )
         self.gridCheck( )
-        gui.display.flip()
+        gui.draw.rect( self.screen, self.lg, gui.rect.Rect( 450, 50, 300*self.progress, 30 ) )
+        gui.display.flip( )

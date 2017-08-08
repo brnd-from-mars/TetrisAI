@@ -26,3 +26,15 @@ class GridController( object ):
         if self.grid[ psX, psY ] != 0:
             return False
         return True
+
+    def apply( self, posX, posY, identifier ):
+        self.grid[ posX, posY ] = identifier
+
+    def removeCompleteRows( self ):
+        for y in range( 19, -1, -1 ):
+            print( y )
+            while np.amin( self.grid.T[ y ] ) != 0:
+                print( np.amin( self.grid.T[ y ] ) )
+                for y2 in range( y, 0, -1 ):
+                    for x in range( 10 ):
+                        self.grid[ x, y2 ] = self.grid[ x, y2-1 ]
