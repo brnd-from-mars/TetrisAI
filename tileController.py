@@ -14,12 +14,15 @@ class Tile( object ):
 
 class MovableTile( Tile ):
 
-    def __init__( self, layout, identifier, grid, posX):
+    def __init__( self, layout, identifier, grid, posX, rot=-1):
         Tile.__init__( self, layout, identifier )
         self.grid = grid
         self.psX = posX
-        self.rot = 0
         self.psY = 0
+        if rot == -1:
+            self.rot = np.random.random_integers(0, 4)
+        else:
+            self.rot = rot
 
     def incX( self ):
         rotated = np.rot90( self.layout, self.rot )
@@ -95,6 +98,10 @@ class MovableTile( Tile ):
                 if -1 < x+self.psX < 10 and -1 < y+self.psY < 20:
                     grid[ x+self.psX, y+self.psY ] = rotated[ x, y ] * self.identifier
         return grid
+
+    def renderPreview( self ):
+        rotated = np.rot90( self.layout, self.rot )
+        return rotated
 
     def apply( self ):
         rendered = self.render( )

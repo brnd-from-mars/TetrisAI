@@ -3,9 +3,6 @@
 
 import pygame as gui
 import numpy as np
-import gridController
-import tileController
-import timeController
 
 
 class ViewController( object ):
@@ -63,15 +60,24 @@ class ViewController( object ):
         self.static = static
 
 
-    def setTile( self, tile ):
-        self.tile = tile
+    def setTile( self, cTile, nTile ):
+        self.cTile = cTile
+        self.nTile = nTile
 
     def updateGrid( self ):
-        grid = self.grid.grid  + self.tile.render( )
+        grid = self.grid.grid  + self.cTile.render( )
         for x in range( 10 ):
             for y in range( 20 ):
                 color = self.colors[ grid[ x, y ] ]
                 gui.draw.rect( self.screen, color, gui.Rect( 30*x+65, 30*y+65, 21, 21 ), 0 )
+
+    def updateGameScreen( self ):
+        color = self.colors[ self.nTile.identifier ]
+        preview = self.nTile.renderPreview( )
+        for x in range( 4 ):
+            for y in range( 4 ):
+                if preview[ x, y ] != 0:
+                    gui.draw.rect( self.screen, color, gui.Rect( 30*x+475, 30*y+185, 21, 21 ), 0 )
 
     def updateTime( self ):
         self.progress = self.time.getIntvProgress( )
@@ -85,21 +91,22 @@ class ViewController( object ):
                 if event.key == gui.K_ESCAPE:
                     gui.event.post( gui.event.Event( gui.QUIT ) )
                 if event.key == gui.K_LEFT:
-                    self.tile.decX( )
+                    self.cTile.decX( )
                 if event.key == gui.K_RIGHT:
-                    self.tile.incX( )
+                    self.cTile.incX( )
                 if event.key == gui.K_DOWN:
-                    self.tile.incY( )
+                    self.cTile.incY( )
                 if event.key == gui.K_COMMA:
-                    self.tile.rotACW( )
+                    self.cTile.rotACW( )
                 if event.key == gui.K_PERIOD:
-                    self.tile.rotCW( )
+                    self.cTile.rotCW( )
                 if event.key == gui.K_RETURN:
-                    self.tile.drop()
+                    self.cTile.drop()
 
     def update( self ):
         self.eventCheck( )
         self.updateStatic( )
         self.updateGrid( )
+        self.updateGameScreen( )
         self.updateTime( )
         gui.display.flip( )
