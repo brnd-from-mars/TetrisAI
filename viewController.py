@@ -2,7 +2,9 @@
 
 
 import pygame as gui
+import numpy as np
 import gridController
+import tile
 
 
 class ViewController( object ):
@@ -40,15 +42,28 @@ class ViewController( object ):
         grid = self.gridController.grid
         for x in range( 10 ):
             for y in range( 20 ):
-                gui.draw.rect( self.screen, self.segment[ grid[ x, y ] ], gui.Rect( 30*x+55, 30*y+55, 21, 21 ), 0)
+                gui.draw.rect( self.screen, self.segment[ grid[ x, y ]+self.rendered[ x, y ] ], gui.Rect( 30*x+55, 30*y+55, 21, 21 ), 0)
 
-    def eventCheck( self ):
+    def tileCheck( self, tile ):
+        self.rendered = tile.render( )
+
+    def eventCheck( self, tile ):
         for event in gui.event.get( ):
             if event.type == gui.QUIT:
                 self.abort = True
             if event.type == gui.KEYDOWN:
                 if event.key == gui.K_ESCAPE:
                     gui.event.post( gui.event.Event( gui.QUIT ) )
+                if event.key == gui.K_LEFT:
+                    tile.decX( )
+                if event.key == gui.K_RIGHT:
+                    tile.incX( )
+                if event.key == gui.K_DOWN:
+                    tile.incY( )
+                if event.key == gui.K_COMMA:
+                    tile.rotACW( )
+                if event.key == gui.K_PERIOD:
+                    tile.rotCW( )
 
     def update( self ):
         self.screen.fill( self.dk )
