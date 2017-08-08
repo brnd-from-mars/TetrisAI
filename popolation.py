@@ -1,7 +1,10 @@
 # population
 
 
+import generation
+
+
 class Population( object ):
 
     def __init__( self ):
-        pass
+        self.generation = [ generation.Generation( 0 ) ]

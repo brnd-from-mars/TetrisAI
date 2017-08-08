@@ -24,6 +24,7 @@ class ViewController( object ):
         self.time = time
         self.score = score
         self.abort = False
+        self.update = True
         gui.init( )
         self.screen = gui.display.set_mode( ( 820,720 ) )
         self.fontBold = gui.font.Font( 'font/texgyrecursor-bold.otf', 60 )
@@ -61,6 +62,8 @@ class ViewController( object ):
         # apply
         self.static = static
 
+    def setUpdate( self, update ):
+        self.update = update
 
     def setTile( self, cTile, nTile ):
         self.cTile = cTile
@@ -72,7 +75,6 @@ class ViewController( object ):
             for y in range( 20 ):
                 color = self.colors[ grid[ x, y ] ]
                 gui.draw.rect( self.screen, color, gui.Rect( 30*x+65, 30*y+65, 21, 21 ), 0 )
-
 
     def updateGameScreen( self ):
         color = self.colors[ self.nTile.identifier ]
@@ -87,7 +89,6 @@ class ViewController( object ):
         score = self.fontRegular.render( str( self.score.getHighscore( ) ), 2, self.lg )
         size = self.fontRegular.size( str( self.score.getHighscore( ) ) )[ 0 ]
         self.screen.blit( score, ( 760-size, 240 ) )
-
 
     def updateDebugScreen( self ):
         self.progress = self.time.getIntvProgress( )
@@ -122,6 +123,8 @@ class ViewController( object ):
 
     def update( self ):
         self.eventCheck( )
+        if not self.update:
+            return
         self.updateStatic( )
         self.updateGrid( )
         self.updateGameScreen( )

@@ -7,7 +7,7 @@ import gridController
 import tileController
 import viewController
 
-import genome
+import ai
 
 
 timeController = timeController.TimeController( 1 )
@@ -22,16 +22,7 @@ nTile = tileController.getRandomTile( )
 viewController.setTile( cTile, nTile )
 
 
-A = genome.Genome()
-A.initialGenome()
-B = genome.Genome()
-B.initialGenome()
-C = genome.Genome()
-C.cross(A, B)
-
-print(A)
-print(B)
-print(C)
+ai = ai.AI( gridController, viewController )
 
 
 while not viewController.abort:

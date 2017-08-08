@@ -7,7 +7,7 @@ from random import choice
 
 class Genome( object ):
 
-    def __init__( self ):
+    def __init__( self, generation ):
         self.identifier           = np.random.random( )
         self.weightRowsCleared    = 0
         self.weightMaxHeight      = 0
@@ -17,12 +17,14 @@ class Genome( object ):
         self.weightRoughness      = 0
         self.mutationRate         = 0.05
         self.mutationStep         = 0.2
-        self.generation           = None
+        self.generation           = generation
         self.mum                  = None
         self.dad                  = None
 
     def __str__( self ):
-        output  = '\n\nIdentifier: ' + str( self.identifier ) + '\nGeneration: ' + str( self.generation ) + '\n'
+        output  = '\n\nIdentifier: ' + str( self.identifier ) + '\nGeneration: ' + str( self.generation )
+        output += '\nMum       : ' + str( self.mum )
+        output += '\nDad       : ' + str( self.dad )
         output += '\n -weightRowsCleared    : ' + str( self.weightRowsCleared    )
         output += '\n -weightMaxHeight      : ' + str( self.weightMaxHeight      )
         output += '\n -weightSumHeight      : ' + str( self.weightSumHeight      )
@@ -39,7 +41,6 @@ class Genome( object ):
         self.weightRelativeHeight = np.random.random( ) - 0.5
         self.weightAmountHoles    = np.random.random( ) - 0.5
         self.weightRoughness      = np.random.random( ) - 0.5
-        self.generation           = 0
 
     def cross( self, mum, dad ):
         self.weightRowsCleared    = choice( [ mum.weightRowsCleared   , dad.weightRowsCleared    ] )
@@ -50,7 +51,6 @@ class Genome( object ):
         self.weightRoughness      = choice( [ mum.weightRoughness     , dad.weightRoughness      ] )
         self.mum                  = mum.identifier
         self.dad                  = dad.identifier
-        self.generation           = mum.generation + 1
 
     def mutate( self ):
         if np.random.random( ) < self.mutationRate:
@@ -65,3 +65,5 @@ class Genome( object ):
             self.weightAmountHoles    = self.weightAmountHoles   + self.mutationStep * ( 2 * np.random.random( ) - 1 )
         if np.random.random( ) < self.mutationRate:
             self.weightRoughness      = self.weightRoughness     + self.mutationStep * ( 2 * np.random.random( ) - 1 )
+
+    __repr__ = __str__
