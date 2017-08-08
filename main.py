@@ -15,16 +15,17 @@ tileController = tileController.TileController( gridController )
 viewController = viewController.ViewController( gridController, timeController )
 
 
-Tile = tileController.getRandomTile(  )
-viewController.setTile( Tile )
+tile = tileController.getRandomTile(  )
+viewController.setTile( tile )
 
 
 while not viewController.abort:
     print( scoreController.getScore( ) )
     if timeController.timeEvent( ):
-        if not Tile.incY():
+        if not tile.incY():
+            tile.apply( )
             scoreController.tileReleased( )
-            Tile.apply( )
-            Tile = tileController.getRandomTile(  )
-            viewController.setTile( Tile )
+            gridController.checkForGameOver( )
+            tile = tileController.getRandomTile(  )
+            viewController.setTile( tile )
     viewController.update( )

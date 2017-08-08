@@ -34,3 +34,12 @@ class GridController( object ):
                     for x in range( 10 ):
                         self.grid[ x, y2 ] = self.grid[ x, y2-1 ]
         self.score.rowsCleared( rows )
+
+    def checkForGameOver( self ):
+        for y in range( 4 ):
+            if np.amax( self.grid.T[ y ] ) != 0:
+                self.reset( )
+
+    def reset( self ):
+        self.grid = np.zeros( [ 10, 20 ], dtype=np.uint8 )
+        self.score.reset( )
