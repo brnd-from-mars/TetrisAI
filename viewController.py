@@ -33,7 +33,7 @@ class ViewController( object ):
         self.static.set_colorkey( ( 0, 0, 0 ) )
         for i in range( 10 ):
             gui.draw.line(self.static, self.lg, ( 30*i+50, 50 ), ( 30*i+50, 650 ) )
-            gui.draw.line(self.static, self.lg, ( 50, 30*i+50 ), ( 350, 30*i+50 ) )
+            gui.draw.line(self.static, self.lg, ( 50, 30*i+50 ), ( 350, 30*i+50 ), 1+2*(i==4) )
             gui.draw.line(self.static, self.lg, ( 50, 30*i+380 ), ( 350, 30*i+380 ) )
         gui.draw.line(self.static, self.lg, ( 350, 50 ), ( 350, 650 ) )
         gui.draw.line(self.static, self.lg, ( 50, 350 ), ( 350, 350 ) )
