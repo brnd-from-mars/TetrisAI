@@ -28,7 +28,6 @@ class ViewController( object ):
         self.screen = gui.display.set_mode( ( 820,720 ) )
         self.fontBold = gui.font.Font( 'font/texgyrecursor-bold.otf', 60 )
         self.fontRegular = gui.font.Font( 'font/texgyrecursor-regular.otf', 30 )
-        self.fontSmall = gui.font.Font( 'font/texgyrecursor-regular.otf', 20 )
         self.updateStatic( True )
 
     def updateStatic( self, render=False ):
@@ -85,14 +84,17 @@ class ViewController( object ):
         score = self.fontRegular.render( str( self.score.getScore( ) ), 2, self.lg )
         size = self.fontRegular.size( str( self.score.getScore( ) ) )[ 0 ]
         self.screen.blit( score, ( 760-size, 180 ) )
-        score = self.fontSmall.render( str( self.score.getHighscore( ) ), 2, self.lg )
-        size = self.fontSmall.size( str( self.score.getHighscore( ) ) )[ 0 ]
-        self.screen.blit( score, ( 760-size, 210 ) )
+        score = self.fontRegular.render( str( self.score.getHighscore( ) ), 2, self.lg )
+        size = self.fontRegular.size( str( self.score.getHighscore( ) ) )[ 0 ]
+        self.screen.blit( score, ( 760-size, 240 ) )
 
 
     def updateDebugScreen( self ):
         self.progress = self.time.getIntvProgress( )
-        gui.draw.rect( self.screen, self.lg, gui.rect.Rect( 470, 420, 290*self.progress, 10 ) )
+        gui.draw.rect( self.screen, self.lg, gui.rect.Rect( 470, 420, min( 290, 290*self.progress ), 10 ) )
+        speed = self.fontRegular.render( str( self.time.getSpeed( ) )+'x', 2, self.lg )
+        size = self.fontRegular.size( str( self.time.getSpeed( ) )+'x' )[ 0 ]
+        self.screen.blit( speed, ( 760-size, 450 ) )
 
     def eventCheck( self ):
         for event in gui.event.get( ):
@@ -112,7 +114,11 @@ class ViewController( object ):
                 if event.key == gui.K_PERIOD:
                     self.cTile.rotCW( )
                 if event.key == gui.K_RETURN:
-                    self.cTile.drop()
+                    self.cTile.drop( )
+                if event.key == gui.K_p:
+                    self.time.incSpeed( )
+                if event.key == gui.K_o:
+                    self.time.decSpeed( )
 
     def update( self ):
         self.eventCheck( )
