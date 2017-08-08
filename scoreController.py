@@ -17,6 +17,9 @@ class ScoreController( object ):
     def getScore( self ):
         return self.score
 
+    def getHighscore( self ):
+        return self.highest
+
     def reset( self ):
         if self.score > self.highest:
             self.highest = self.score

@@ -18,14 +18,17 @@ class ViewController( object ):
     lg = ( 112, 108,  90 )
     colors = [ dk, rd, pk, bl, yw, gn, cy, og ]
 
-    def __init__( self, grid, time ):
+    def __init__( self, grid, time, score ):
 
         self.grid = grid
         self.time = time
+        self.score = score
         self.abort = False
         gui.init( )
         self.screen = gui.display.set_mode( ( 820,720 ) )
         self.fontBold = gui.font.Font( 'font/texgyrecursor-bold.otf', 60 )
+        self.fontRegular = gui.font.Font( 'font/texgyrecursor-regular.otf', 30 )
+        self.fontSmall = gui.font.Font( 'font/texgyrecursor-regular.otf', 20 )
         self.updateStatic( True )
 
     def updateStatic( self, render=False ):
@@ -71,6 +74,7 @@ class ViewController( object ):
                 color = self.colors[ grid[ x, y ] ]
                 gui.draw.rect( self.screen, color, gui.Rect( 30*x+65, 30*y+65, 21, 21 ), 0 )
 
+
     def updateGameScreen( self ):
         color = self.colors[ self.nTile.identifier ]
         preview = self.nTile.renderPreview( )
@@ -78,8 +82,15 @@ class ViewController( object ):
             for y in range( 4 ):
                 if preview[ x, y ] != 0:
                     gui.draw.rect( self.screen, color, gui.Rect( 30*x+475, 30*y+185, 21, 21 ), 0 )
+        score = self.fontRegular.render( str( self.score.getScore( ) ), 2, self.lg )
+        size = self.fontRegular.size( str( self.score.getScore( ) ) )[ 0 ]
+        self.screen.blit( score, ( 760-size, 180 ) )
+        score = self.fontSmall.render( str( self.score.getHighscore( ) ), 2, self.lg )
+        size = self.fontSmall.size( str( self.score.getHighscore( ) ) )[ 0 ]
+        self.screen.blit( score, ( 760-size, 210 ) )
 
-    def updateTime( self ):
+
+    def updateDebugScreen( self ):
         self.progress = self.time.getIntvProgress( )
         gui.draw.rect( self.screen, self.lg, gui.rect.Rect( 470, 420, 290*self.progress, 10 ) )
 
@@ -108,5 +119,5 @@ class ViewController( object ):
         self.updateStatic( )
         self.updateGrid( )
         self.updateGameScreen( )
-        self.updateTime( )
+        self.updateDebugScreen( )
         gui.display.flip( )

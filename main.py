@@ -12,7 +12,7 @@ timeController = timeController.TimeController( 1 )
 scoreController = scoreController.ScoreController( )
 gridController = gridController.GridController( scoreController )
 tileController = tileController.TileController( gridController )
-viewController = viewController.ViewController( gridController, timeController )
+viewController = viewController.ViewController( gridController, timeController, scoreController )
 
 
 cTile = tileController.getRandomTile( )
