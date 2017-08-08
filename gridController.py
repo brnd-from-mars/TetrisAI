@@ -6,7 +6,8 @@ import numpy as np
 
 class GridController( object ):
 
-    def __init__( self ):
+    def __init__( self, score ):
+        self.score = score
         self.grid = np.zeros( [ 10, 20 ], dtype=np.uint8 )
         for y in range( 14, 20 ):
             for x in range( 10 ):
@@ -25,8 +26,11 @@ class GridController( object ):
         self.grid[ posX, posY ] = identifier
 
     def removeCompleteRows( self ):
+        rows = 0
         for y in range( 19, -1, -1 ):
             while np.amin( self.grid.T[ y ] ) != 0:
+                rows += 1
                 for y2 in range( y, 0, -1 ):
                     for x in range( 10 ):
                         self.grid[ x, y2 ] = self.grid[ x, y2-1 ]
+        self.score.rowsCleared( rows )
