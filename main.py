@@ -1,20 +1,20 @@
 # main.py
 
 
-import tile
+import tileController
 import gridController
 import viewController
 
 
-tileController = tile.TileController()
 gridController = gridController.GridController( )
+tileController = tileController.TileController( gridController )
 viewController = viewController.ViewController( gridController )
 
 
-mTile = tileController.getRandomTile(  )
+Tile = tileController.getRandomTile(  )
 
 
 while not viewController.abort:
-    viewController.eventCheck( mTile )
-    viewController.tileCheck( mTile )
+    viewController.eventCheck( Tile )
+    viewController.tileCheck( Tile )
     viewController.update( )
