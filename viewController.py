@@ -27,28 +27,38 @@ class ViewController( object ):
         self.time = time
         self.abort = False
         gui.init( )
-        self.screen = gui.display.set_mode( ( 800,700 ) )
+        self.screen = gui.display.set_mode( ( 820,720 ) )
+        self.fontBold = gui.font.Font( 'font/texgyrecursor-bold.otf', 60 )
         self.updateStatic( True )
 
     def updateStatic( self, render=False ):
         if not render:
             self.screen.blit( self.static, ( 0, 0 ) )
             return
-        static = gui.Surface( ( 800, 700 ) )
+        static = gui.Surface( ( 820, 720 ) )
         static.set_colorkey( ( 0, 0, 0 ) )
         # background
         static.fill( self.dk )
+        # draw seperator
+        gui.draw.line(static, self.lg, ( 410, 0 ), ( 410, 720 ), 2 )
+        gui.draw.line(static, self.lg, ( 410, 360 ), ( 820, 360 ), 2 )
         # draw grid lines
         for i in range( 10 ):
-            gui.draw.line(static, self.lg, ( 30*i+50, 50 ), ( 30*i+50, 650 ) )
-            gui.draw.line(static, self.lg, ( 50, 30*i+50 ), ( 350, 30*i+50 ), 1+2*(i==4) )
-            gui.draw.line(static, self.lg, ( 50, 30*i+380 ), ( 350, 30*i+380 ) )
-        gui.draw.line(static, self.lg, ( 350, 50 ), ( 350, 650 ) )
-        gui.draw.line(static, self.lg, ( 50, 350 ), ( 350, 350 ) )
-        # draw seperator
-        gui.draw.line(static, self.lg, ( 400, 0 ), ( 400, 700 ), 2 )
+            gui.draw.line(static, self.lg, ( 30*i+60, 60 ), ( 30*i+60, 660 ) )
+            gui.draw.line(static, self.lg, ( 60, 30*i+60 ), ( 360, 30*i+60 ), 1+2*(i==4) )
+            gui.draw.line(static, self.lg, ( 60, 30*i+390 ), ( 360, 30*i+390 ) )
+        gui.draw.line(static, self.lg, ( 360, 60 ), ( 360, 660 ) )
+        gui.draw.line(static, self.lg, ( 60, 360 ), ( 360, 360 ) )
+        # draw tile preview
+        for i in range( 5 ):
+            gui.draw.line(static, self.lg, ( 470, 30*i+180), ( 590, 30*i+180) )
+            gui.draw.line(static, self.lg, ( 30*i+470, 180), ( 30*i+470, 300) )
         # draw event time bar
-        gui.draw.rect(static, self.lg, gui.rect.Rect( 450, 50, 300, 30 ), 1 )
+        gui.draw.rect(static, self.lg, gui.rect.Rect( 470, 420, 290, 10 ), 1 )
+        # draw headline
+        header = self.fontBold.render( 'TetrisAI', 2, self.lg )
+        size = self.fontBold.size( 'TetrisAI' )[ 0 ]
+        static.blit( header, ( 615-size/2, 30 ) )
         # apply
         self.static = static
 
@@ -61,11 +71,11 @@ class ViewController( object ):
         for x in range( 10 ):
             for y in range( 20 ):
                 color = self.colors[ grid[ x, y ] ]
-                gui.draw.rect( self.screen, color, gui.Rect( 30*x+55, 30*y+55, 21, 21 ), 0 )
+                gui.draw.rect( self.screen, color, gui.Rect( 30*x+65, 30*y+65, 21, 21 ), 0 )
 
     def updateTime( self ):
         self.progress = self.time.getIntvProgress( )
-        gui.draw.rect( self.screen, self.lg, gui.rect.Rect( 450, 50, 300*self.progress, 30 ) )
+        gui.draw.rect( self.screen, self.lg, gui.rect.Rect( 470, 420, 290*self.progress, 10 ) )
 
     def eventCheck( self ):
         for event in gui.event.get( ):
