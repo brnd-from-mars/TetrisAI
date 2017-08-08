@@ -31,8 +31,9 @@ class MovableTile( Tile ):
                     lastBlock = columnIndex
             if lastBlock != -1:
                 if not self.grid.checkField( self.psX + lastBlock + 1, self.psY + rowIndex ):
-                    return
+                    return False
         self.psX += 1
+        return True
 
     def decX( self ):
         rotated = np.rot90( self.layout, self.rot )
@@ -44,8 +45,9 @@ class MovableTile( Tile ):
                     firstBlock = columnIndex
             if firstBlock != -1:
                 if not self.grid.checkField( self.psX + firstBlock - 1, self.psY + rowIndex ):
-                    return
+                    return Fale
         self.psX -= 1
+        return True
 
     def incY( self ):
         rotated = np.rot90( self.layout, self.rot )
@@ -58,8 +60,9 @@ class MovableTile( Tile ):
                     lowestBlock = rowIndex
             if lowestBlock != -1:
                 if not self.grid.checkField( self.psX + columnIndex, self.psY + lowestBlock + 1 ):
-                    return
+                    return False
         self.psY += 1
+        return True
 
     def rotCW( self ):
         rotated = np.rot90( self.layout, ( self.rot + 1 ) % 4 )
@@ -67,8 +70,9 @@ class MovableTile( Tile ):
             for y in range( 4 ):
                 if rotated[ x, y ] == 1:
                     if not self.grid.checkField( self.psX + x, self.psY + y ):
-                        return
+                        return False
         self.rot = ( self.rot + 1 ) % 4
+        return True
 
     def rotACW( self ):
         rotated = np.rot90( self.layout, ( self.rot -1 ) % 4 )
@@ -76,8 +80,9 @@ class MovableTile( Tile ):
             for y in range( 4 ):
                 if rotated[ x, y ] == 1:
                     if not self.grid.checkField( self.psX + x, self.psY + y ):
-                        return
+                        return False
         self.rot = ( self.rot - 1 ) % 4
+        return True
 
     def render( self ):
         grid = np.zeros( [ 10, 20 ], dtype=np.uint8 )
@@ -85,5 +90,22 @@ class MovableTile( Tile ):
         for x in range(4):
             for y in range(4):
                 if -1 < x+self.psX < 10 and -1 < y+self.psY < 20:
-                    grid[ x+self.psX, y+self.psY ] = rotated[ x, y ]
+                    grid[ x+self.psX, y+self.psY ] = rotated[ x, y ] * self.identifier
         return grid
+
+class TileController( object ):
+
+    def __init__( self ):
+        self.tileSet = [
+            Tile( [ [1,0,0,0],[1,1,0,0],[1,0,0,0],[0,0,0,0] ], 1 ),
+            Tile( [ [0,1,0,0],[0,1,0,0],[0,1,0,0],[0,1,0,0] ], 2 ),
+            Tile( [ [0,0,0,0],[0,1,1,1],[0,1,0,0],[0,0,0,0] ], 3 ),
+            Tile( [ [0,1,0,0],[0,1,1,1],[0,0,0,0],[0,0,0,0] ], 4 ),
+            Tile( [ [0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0] ], 5 ),
+            Tile( [ [1,1,0,0],[0,1,1,0],[0,0,0,0],[0,0,0,0] ], 6 ),
+            Tile( [ [0,0,0,0],[0,1,1,0],[1,1,0,0],[0,0,0,0] ], 7 )
+        ]
+
+    def getRandomTile( self ):
+        pattern = self.tileSet[ np.random.random_integers( 6 ) ]
+        return MovableTile( pattern.layout, pattern.identifier, gridController )
