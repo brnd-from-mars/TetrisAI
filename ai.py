@@ -7,9 +7,8 @@ import numpy as np
 
 class AI( object ):
 
-    def __init__( self, grid, view ):
+    def __init__( self, grid ):
         self.grid = grid
-        self.view = view
         self.population = population.Population( )
         self.currentGeneration = 0
         self.currentGenome = 0
@@ -17,7 +16,6 @@ class AI( object ):
         self.backupTile = [ 0, 0, 0 ]
 
     def makeMove( self, tile ):
-        self.view.setUpdate( False )
         self.backupGrid = np.copy( self.grid.grid )
         self.grid.realAction = False
         self.backupTile = [ tile.psX, tile.psY, tile.rot ]
@@ -40,21 +38,28 @@ class AI( object ):
                 tile.apply( )
                 self.grid.removeCompleteRows( )
 
-                if self.rateMove( ) > bestRating:
+                if self.rateMove( )[ 0 ] > bestRating:
                     bestMove = move
                     bestRotate = rotate
-                    bestRating = self.rateMove( )
+                    bestRating, gameover = self.rateMove( )
 
                 tile.psX, tile.psY, tile.rot = self.backupTile
                 self.grid.grid = np.copy( self.backupGrid )
 
         self.grid.realAction = True
         self.grid.grid = np.copy( self.backupGrid )
-        self.view.setUpdate( True )
+
+        if gameover:
+            if self.currentGenome == 19:
+                self.currentGenome = 0
+                #self.currentGeneration += 1
+            else:
+                self.currentGenome += 1
 
         return bestMove, bestRotate, bestRating
 
     def rateMove( self ):
+        gameover = False
         cGenome = self.population.generations[ self.currentGeneration ].genomes[ self.currentGenome ]
         rating = 0
         rating += self.grid.lastRowsCleared * cGenome.weightRowsCleared
@@ -65,4 +70,5 @@ class AI( object ):
         rating += self.grid.lastRoughness * cGenome.weightRoughness
         if self.grid.checkForGameOver( ):
             rating -= 500
-        return rating
+            gameover = True
+        return rating, gameover
