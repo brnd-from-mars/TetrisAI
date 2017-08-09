@@ -104,14 +104,20 @@ class ViewController( object ):
         self.progress = self.time.getIntvProgress( )
         gui.draw.rect( self.screen, self.lg, gui.rect.Rect( 470, 420, min( 290, 290*self.progress ), 10 ) )
 
+        label = self.fontRegular.render( 'Speed', 2, self.lg )
+        self.screen.blit( label, ( 470, 450 ) )
         label = self.fontRegular.render( str( self.time.getSpeed( ) )+'x', 2, self.lg )
         size = self.fontRegular.size( str( self.time.getSpeed( ) )+'x' )[ 0 ]
         self.screen.blit( label, ( 760-size, 450 ) )
 
+        label = self.fontRegular.render( 'Generation', 2, self.lg )
+        self.screen.blit( label, ( 470, 480 ) )
         label = self.fontRegular.render( str( self.ai.currentGeneration )+'x', 2, self.lg )
         size = self.fontRegular.size( str( self.ai.currentGeneration )+'x' )[ 0 ]
         self.screen.blit( label, ( 760-size, 480 ) )
 
+        label = self.fontRegular.render( 'Genom', 2, self.lg )
+        self.screen.blit( label, ( 470, 510 ) )
         label = self.fontRegular.render( str( self.ai.currentGenome )+'x', 2, self.lg )
         size = self.fontRegular.size( str( self.ai.currentGenome )+'x' )[ 0 ]
         self.screen.blit( label, ( 760-size, 510 ) )
@@ -124,7 +130,7 @@ class ViewController( object ):
             if event.type == gui.KEYDOWN:
                 if event.key == gui.K_ESCAPE:
                     gui.event.post( gui.event.Event( gui.QUIT ) )
-                if event.key == gui.K_LEFT:^
+                if event.key == gui.K_LEFT:
                     self.cTile.decX( )
                 if event.key == gui.K_RIGHT:
                     self.cTile.incX( )
