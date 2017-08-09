@@ -5,24 +5,25 @@ import timeController
 import scoreController
 import gridController
 import tileController
-import viewController
 
 import ai
+
+import viewController
 
 
 timeController = timeController.TimeController( 1 )
 scoreController = scoreController.ScoreController( )
 gridController = gridController.GridController( scoreController )
 tileController = tileController.TileController( gridController )
-viewController = viewController.ViewController( gridController, timeController, scoreController )
+
+ai = ai.AI( gridController )
+
+viewController = viewController.ViewController( gridController, timeController, scoreController, ai )
 
 
 cTile = tileController.getRandomTile( )
 nTile = tileController.getRandomTile( )
 viewController.setTile( cTile, nTile )
-
-
-ai = ai.AI( gridController, viewController )
 
 
 while not viewController.abort:

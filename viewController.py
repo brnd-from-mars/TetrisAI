@@ -18,11 +18,12 @@ class ViewController( object ):
     lg = ( 112, 108,  90 )
     colors = [ dk, rd, pk, bl, yw, gn, cy, og ]
 
-    def __init__( self, grid, time, score ):
+    def __init__( self, grid, time, score, ai ):
 
         self.grid = grid
         self.time = time
         self.score = score
+        self.ai = ai
         self.abort = False
         self.update = True
         gui.init( )
@@ -56,9 +57,16 @@ class ViewController( object ):
         # draw event time bar
         gui.draw.rect(static, self.lg, gui.rect.Rect( 470, 420, 290, 10 ), 1 )
         # draw headline
-        header = self.fontBold.render( 'TetrisAI', 2, self.lg )
+        label = self.fontBold.render( 'TetrisAI', 2, self.lg )
         size = self.fontBold.size( 'TetrisAI' )[ 0 ]
-        static.blit( header, ( 615-size/2, 30 ) )
+        static.blit( label, ( 615-size/2, 30 ) )
+        # draw ai labels
+        label = self.fontRegular.render( 'Speed', 2, self.lg )
+        self.screen.blit( label, ( 470, 450 ) )
+        label = self.fontRegular.render( 'Generation', 2, self.lg )
+        self.screen.blit( label, ( 470, 480 ) )
+        label = self.fontRegular.render( 'Genom', 2, self.lg )
+        self.screen.blit( label, ( 470, 510 ) )
         # apply
         self.static = static
 
@@ -83,19 +91,31 @@ class ViewController( object ):
             for y in range( 4 ):
                 if preview[ x, y ] != 0:
                     gui.draw.rect( self.screen, color, gui.Rect( 30*x+475, 30*y+185, 21, 21 ), 0 )
-        score = self.fontRegular.render( str( self.score.getScore( ) ), 2, self.lg )
-        size = self.fontRegular.size( str( self.score.getScore( ) ) )[ 0 ]
-        self.screen.blit( score, ( 760-size, 180 ) )
-        score = self.fontRegular.render( str( self.score.getHighscore( ) ), 2, self.lg )
-        size = self.fontRegular.size( str( self.score.getHighscore( ) ) )[ 0 ]
-        self.screen.blit( score, ( 760-size, 240 ) )
 
-    def updateDebugScreen( self ):
+        label = self.fontRegular.render( str( self.score.getScore( ) ), 2, self.lg )
+        size = self.fontRegular.size( str( self.score.getScore( ) ) )[ 0 ]
+        self.screen.blit( label, ( 760-size, 180 ) )
+
+        label = self.fontRegular.render( str( self.score.getHighscore( ) ), 2, self.lg )
+        size = self.fontRegular.size( str( self.score.getHighscore( ) ) )[ 0 ]
+        self.screen.blit( label, ( 760-size, 240 ) )
+
+    def updateAiScreen( self ):
         self.progress = self.time.getIntvProgress( )
         gui.draw.rect( self.screen, self.lg, gui.rect.Rect( 470, 420, min( 290, 290*self.progress ), 10 ) )
-        speed = self.fontRegular.render( str( self.time.getSpeed( ) )+'x', 2, self.lg )
+
+        label = self.fontRegular.render( str( self.time.getSpeed( ) )+'x', 2, self.lg )
         size = self.fontRegular.size( str( self.time.getSpeed( ) )+'x' )[ 0 ]
-        self.screen.blit( speed, ( 760-size, 450 ) )
+        self.screen.blit( label, ( 760-size, 450 ) )
+
+        label = self.fontRegular.render( str( self.ai.currentGeneration )+'x', 2, self.lg )
+        size = self.fontRegular.size( str( self.ai.currentGeneration )+'x' )[ 0 ]
+        self.screen.blit( label, ( 760-size, 480 ) )
+
+        label = self.fontRegular.render( str( self.ai.currentGenome )+'x', 2, self.lg )
+        size = self.fontRegular.size( str( self.ai.currentGenome )+'x' )[ 0 ]
+        self.screen.blit( label, ( 760-size, 510 ) )
+
 
     def eventCheck( self ):
         for event in gui.event.get( ):
@@ -104,7 +124,7 @@ class ViewController( object ):
             if event.type == gui.KEYDOWN:
                 if event.key == gui.K_ESCAPE:
                     gui.event.post( gui.event.Event( gui.QUIT ) )
-                if event.key == gui.K_LEFT:
+                if event.key == gui.K_LEFT:^
                     self.cTile.decX( )
                 if event.key == gui.K_RIGHT:
                     self.cTile.incX( )
@@ -128,5 +148,5 @@ class ViewController( object ):
         self.updateStatic( )
         self.updateGrid( )
         self.updateGameScreen( )
-        self.updateDebugScreen( )
+        self.updateAiScreen( )
         gui.display.flip( )
