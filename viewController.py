@@ -121,7 +121,7 @@ class ViewController( object ):
                 if event.key == gui.K_o:
                     self.time.decSpeed( )
 
-    def update( self ):
+    def updateEverything( self ):
         self.eventCheck( )
         if not self.update:
             return

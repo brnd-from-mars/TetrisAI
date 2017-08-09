@@ -26,6 +26,18 @@ ai = ai.AI( gridController, viewController )
 
 
 while not viewController.abort:
+    move, rotate, rating =  ai.makeMove( cTile )
+    print( rating )
+    for i in range( 0, rotate ):
+        cTile.rotCW( )
+    if move<0:
+        for i in range( 0, -move ):
+            cTile.decX( )
+    if move>0:
+        for i in range( 0, move ):
+            cTile.incX( )
+    cTile.drop()
+
     if timeController.timeEvent( ):
         if not cTile.incY( ):
             cTile.apply( )
@@ -34,4 +46,4 @@ while not viewController.abort:
             cTile = nTile
             nTile = tileController.getRandomTile( )
             viewController.setTile( cTile, nTile )
-    viewController.update( )
+    viewController.updateEverything( )
