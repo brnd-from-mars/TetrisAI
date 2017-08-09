@@ -52,9 +52,20 @@ class AI( object ):
         if gameover:
             if self.currentGenome == 19:
                 self.currentGenome = 0
+                self.population.generations[ self.currentGeneration ].genomes[ self.currentGenome ].score = score.getScore( )
                 #self.currentGeneration += 1
             else:
                 self.currentGenome += 1
+
+        for i in range( 0, bestRotate ):
+            tile.rotCW( )
+        if bestMove<0:
+            for i in range( 0, -bestMove ):
+                tile.decX( )
+        if bestMove>0:
+            for i in range( 0, bestMove ):
+                tile.incX( )
+        tile.drop( )
 
         return bestMove, bestRotate, bestRating
 

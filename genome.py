@@ -20,6 +20,7 @@ class Genome( object ):
         self.generation           = generation
         self.mum                  = None
         self.dad                  = None
+        self.score                = 0
 
     def __str__( self ):
         output  = '\n\nIdentifier: ' + str( self.identifier ) + '\nGeneration: ' + str( self.generation )

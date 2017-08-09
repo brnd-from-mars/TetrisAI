@@ -27,19 +27,8 @@ viewController.setTile( cTile, nTile )
 
 
 while not viewController.abort:
-    move, rotate, rating =  ai.makeMove( cTile )
-    print( rating )
-    for i in range( 0, rotate ):
-        cTile.rotCW( )
-    if move<0:
-        for i in range( 0, -move ):
-            cTile.decX( )
-    if move>0:
-        for i in range( 0, move ):
-            cTile.incX( )
-    cTile.drop()
-
     if timeController.timeEvent( ):
+        move, rotate, rating =  ai.makeMove( cTile )
         if not cTile.incY( ):
             cTile.apply( )
             scoreController.tileReleased( )
