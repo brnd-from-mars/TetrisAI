@@ -7,8 +7,9 @@ import numpy as np
 
 class AI( object ):
 
-    def __init__( self, grid ):
+    def __init__( self, grid, score ):
         self.grid = grid
+        self.score = score
         self.population = population.Population( )
         self.currentGeneration = 0
         self.currentGenome = 0
@@ -50,9 +51,10 @@ class AI( object ):
         self.grid.grid = np.copy( self.backupGrid )
 
         if gameover:
-            if self.currentGenome == 19:
+            self.population.generations[ self.currentGeneration ].genomes[ self.currentGenome ].score = self.score.getScore( )
+            if self.currentGenome == 2:
                 self.currentGenome = 0
-                self.population.generations[ self.currentGeneration ].genomes[ self.currentGenome ].score = score.getScore( )
+                print(self.population.generations[ self.currentGeneration ])
                 #self.currentGeneration += 1
             else:
                 self.currentGenome += 1

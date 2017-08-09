@@ -30,19 +30,20 @@ class ViewController( object ):
         self.screen = gui.display.set_mode( ( 820,720 ) )
         self.fontBold = gui.font.Font( 'font/texgyrecursor-bold.otf', 60 )
         self.fontRegular = gui.font.Font( 'font/texgyrecursor-regular.otf', 30 )
+        self.fontSmall = gui.font.Font( 'font/texgyrecursor-regular.otf', 20 )
         self.updateStatic( True )
 
     def updateStatic( self, render=False ):
         if not render:
             self.screen.blit( self.static, ( 0, 0 ) )
             return
-        static = gui.Surface( ( 820, 720 ) )
+        static = gui.Surface( ( 840, 720 ) )
         static.set_colorkey( ( 0, 0, 0 ) )
         # background
         static.fill( self.dk )
         # draw seperator
-        gui.draw.line(static, self.lg, ( 410, 0 ), ( 410, 720 ), 2 )
-        gui.draw.line(static, self.lg, ( 410, 360 ), ( 820, 360 ), 2 )
+        gui.draw.line(static, self.lg, ( 420, 0 ), ( 420, 720 ), 2 )
+        gui.draw.line(static, self.lg, ( 420, 360 ), ( 840, 360 ), 2 )
         # draw grid lines
         for i in range( 10 ):
             gui.draw.line(static, self.lg, ( 30*i+60, 60 ), ( 30*i+60, 660 ) )
@@ -52,21 +53,31 @@ class ViewController( object ):
         gui.draw.line(static, self.lg, ( 60, 360 ), ( 360, 360 ) )
         # draw tile preview
         for i in range( 5 ):
-            gui.draw.line(static, self.lg, ( 470, 30*i+180), ( 590, 30*i+180) )
-            gui.draw.line(static, self.lg, ( 30*i+470, 180), ( 30*i+470, 300) )
+            gui.draw.line(static, self.lg, ( 480, 30*i+180), ( 600, 30*i+180) )
+            gui.draw.line(static, self.lg, ( 30*i+480, 180), ( 30*i+480, 300) )
         # draw event time bar
-        gui.draw.rect(static, self.lg, gui.rect.Rect( 470, 420, 290, 10 ), 1 )
+        gui.draw.rect(static, self.lg, gui.rect.Rect( 480, 420, 300, 10 ), 1 )
         # draw headline
         label = self.fontBold.render( 'TetrisAI', 2, self.lg )
         size = self.fontBold.size( 'TetrisAI' )[ 0 ]
         static.blit( label, ( 615-size/2, 30 ) )
         # draw ai labels
         label = self.fontRegular.render( 'Speed', 2, self.lg )
-        self.screen.blit( label, ( 470, 450 ) )
+        static.blit( label, ( 480, 450 ) )
         label = self.fontRegular.render( 'Generation', 2, self.lg )
-        self.screen.blit( label, ( 470, 480 ) )
+        static.blit( label, ( 480, 480 ) )
         label = self.fontRegular.render( 'Genom', 2, self.lg )
-        self.screen.blit( label, ( 470, 510 ) )
+        static.blit( label, ( 480, 510 ) )
+        # draw buttons
+        gui.draw.rect( static, self.lg, gui.Rect( 480, 630, 101, 30 ), 1 )
+        gui.draw.rect( static, self.lg, gui.Rect( 580, 630, 101, 30 ), 1 )
+        gui.draw.rect( static, self.lg, gui.Rect( 680, 630, 101, 30 ), 1 )
+        label = self.fontSmall.render( 'General', 2, self.lg )
+        static.blit( label, ( 485, 630 ) )
+        label = self.fontSmall.render( 'Genomes', 2, self.lg )
+        static.blit( label, ( 585, 630 ) )
+        label = self.fontSmall.render( 'Graph', 2, self.lg )
+        static.blit( label, ( 685, 630 ) )
         # apply
         self.static = static
 
@@ -90,37 +101,37 @@ class ViewController( object ):
         for x in range( 4 ):
             for y in range( 4 ):
                 if preview[ x, y ] != 0:
-                    gui.draw.rect( self.screen, color, gui.Rect( 30*x+475, 30*y+185, 21, 21 ), 0 )
+                    gui.draw.rect( self.screen, color, gui.Rect( 30*x+485, 30*y+185, 21, 21 ), 0 )
 
         label = self.fontRegular.render( str( self.score.getScore( ) ), 2, self.lg )
         size = self.fontRegular.size( str( self.score.getScore( ) ) )[ 0 ]
-        self.screen.blit( label, ( 760-size, 180 ) )
+        self.screen.blit( label, ( 780-size, 180 ) )
 
         label = self.fontRegular.render( str( self.score.getHighscore( ) ), 2, self.lg )
         size = self.fontRegular.size( str( self.score.getHighscore( ) ) )[ 0 ]
-        self.screen.blit( label, ( 760-size, 240 ) )
+        self.screen.blit( label, ( 780-size, 240 ) )
 
     def updateAiScreen( self ):
         self.progress = self.time.getIntvProgress( )
         gui.draw.rect( self.screen, self.lg, gui.rect.Rect( 470, 420, min( 290, 290*self.progress ), 10 ) )
 
         label = self.fontRegular.render( 'Speed', 2, self.lg )
-        self.screen.blit( label, ( 470, 450 ) )
+        self.screen.blit( label, ( 480, 450 ) )
         label = self.fontRegular.render( str( self.time.getSpeed( ) )+'x', 2, self.lg )
         size = self.fontRegular.size( str( self.time.getSpeed( ) )+'x' )[ 0 ]
-        self.screen.blit( label, ( 760-size, 450 ) )
+        self.screen.blit( label, ( 780-size, 450 ) )
 
         label = self.fontRegular.render( 'Generation', 2, self.lg )
-        self.screen.blit( label, ( 470, 480 ) )
-        label = self.fontRegular.render( str( self.ai.currentGeneration )+'x', 2, self.lg )
-        size = self.fontRegular.size( str( self.ai.currentGeneration )+'x' )[ 0 ]
-        self.screen.blit( label, ( 760-size, 480 ) )
+        self.screen.blit( label, ( 480, 480 ) )
+        label = self.fontRegular.render( str( self.ai.currentGeneration ), 2, self.lg )
+        size = self.fontRegular.size( str( self.ai.currentGeneration ) )[ 0 ]
+        self.screen.blit( label, ( 780-size, 480 ) )
 
         label = self.fontRegular.render( 'Genom', 2, self.lg )
-        self.screen.blit( label, ( 470, 510 ) )
-        label = self.fontRegular.render( str( self.ai.currentGenome )+'x', 2, self.lg )
-        size = self.fontRegular.size( str( self.ai.currentGenome )+'x' )[ 0 ]
-        self.screen.blit( label, ( 760-size, 510 ) )
+        self.screen.blit( label, ( 480, 510 ) )
+        label = self.fontRegular.render( str( self.ai.currentGenome ), 2, self.lg )
+        size = self.fontRegular.size( str( self.ai.currentGenome ) )[ 0 ]
+        self.screen.blit( label, ( 780-size, 510 ) )
 
 
     def eventCheck( self ):

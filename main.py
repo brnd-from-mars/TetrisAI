@@ -16,7 +16,7 @@ scoreController = scoreController.ScoreController( )
 gridController = gridController.GridController( scoreController )
 tileController = tileController.TileController( gridController )
 
-ai = ai.AI( gridController )
+ai = ai.AI( gridController, scoreController )
 
 viewController = viewController.ViewController( gridController, timeController, scoreController, ai )
 
