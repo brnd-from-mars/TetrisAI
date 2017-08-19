@@ -31,8 +31,8 @@ while not viewController.abort:
         move, rotate, rating =  ai.makeMove( cTile )
         if not cTile.incY( ):
             cTile.apply( )
-            scoreController.tileReleased( )
-            gridController.checkForGameOver( )
+            if not gridController.checkForGameOver( ):
+                scoreController.tileReleased( )
             cTile = nTile
             nTile = tileController.getRandomTile( )
             viewController.setTile( cTile, nTile )

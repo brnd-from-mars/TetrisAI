@@ -3,6 +3,7 @@
 
 import pygame as gui
 import numpy as np
+import os
 
 
 class ViewController( object ):
@@ -20,17 +21,23 @@ class ViewController( object ):
 
     def __init__( self, grid, time, score, ai ):
 
+        try:
+            os.environ['SDL_VIDEO_WINDOW_POS'] = '10,50'
+        except:
+            pass
         self.grid = grid
         self.time = time
         self.score = score
         self.ai = ai
         self.abort = False
         self.update = True
+        self.infoMode = 0
+        self.genomeScreen = [ 0, -1 ]
         gui.init( )
         self.screen = gui.display.set_mode( ( 820,720 ) )
         self.fontBold = gui.font.Font( 'font/texgyrecursor-bold.otf', 60 )
         self.fontRegular = gui.font.Font( 'font/texgyrecursor-regular.otf', 30 )
-        self.fontSmall = gui.font.Font( 'font/texgyrecursor-regular.otf', 20 )
+        self.fontSmall = gui.font.Font( 'font/texgyrecursor-regular.otf', 15 )
         self.updateStatic( True )
 
     def updateStatic( self, render=False ):
@@ -55,19 +62,10 @@ class ViewController( object ):
         for i in range( 5 ):
             gui.draw.line(static, self.lg, ( 480, 30*i+180), ( 600, 30*i+180) )
             gui.draw.line(static, self.lg, ( 30*i+480, 180), ( 30*i+480, 300) )
-        # draw event time bar
-        gui.draw.rect(static, self.lg, gui.rect.Rect( 480, 420, 300, 10 ), 1 )
         # draw headline
         label = self.fontBold.render( 'TetrisAI', 2, self.lg )
         size = self.fontBold.size( 'TetrisAI' )[ 0 ]
         static.blit( label, ( 615-size/2, 30 ) )
-        # draw ai labels
-        label = self.fontRegular.render( 'Speed', 2, self.lg )
-        static.blit( label, ( 480, 450 ) )
-        label = self.fontRegular.render( 'Generation', 2, self.lg )
-        static.blit( label, ( 480, 480 ) )
-        label = self.fontRegular.render( 'Genom', 2, self.lg )
-        static.blit( label, ( 480, 510 ) )
         # draw buttons
         gui.draw.rect( static, self.lg, gui.Rect( 480, 630, 101, 30 ), 1 )
         gui.draw.rect( static, self.lg, gui.Rect( 580, 630, 101, 30 ), 1 )
@@ -111,9 +109,10 @@ class ViewController( object ):
         size = self.fontRegular.size( str( self.score.getHighscore( ) ) )[ 0 ]
         self.screen.blit( label, ( 780-size, 240 ) )
 
-    def updateAiScreen( self ):
+    def updateGeneralScreen( self ):
+        gui.draw.rect(self.screen, self.lg, gui.rect.Rect( 480, 420, 300, 10 ), 1 )
         self.progress = self.time.getIntvProgress( )
-        gui.draw.rect( self.screen, self.lg, gui.rect.Rect( 470, 420, min( 290, 290*self.progress ), 10 ) )
+        gui.draw.rect( self.screen, self.lg, gui.rect.Rect( 480, 420, min( 300, 300*self.progress ), 10 ) )
 
         label = self.fontRegular.render( 'Speed', 2, self.lg )
         self.screen.blit( label, ( 480, 450 ) )
@@ -132,6 +131,29 @@ class ViewController( object ):
         label = self.fontRegular.render( str( self.ai.currentGenome ), 2, self.lg )
         size = self.fontRegular.size( str( self.ai.currentGenome ) )[ 0 ]
         self.screen.blit( label, ( 780-size, 510 ) )
+
+    def updateGenomeScreen( self ):
+        gui.draw.rect( self.screen, self.lg, gui.Rect( 630, 405, 39, 30 ), 1 )
+        gui.draw.rect( self.screen, self.lg, gui.Rect( 668, 405, 39, 30 ), 1 )
+        gui.draw.rect( self.screen, self.lg, gui.Rect( 706, 405, 39, 30 ), 1 )
+        gui.draw.rect( self.screen, self.lg, gui.Rect( 744, 405, 39, 30 ), 1 )
+
+        label = self.fontRegular.render( str( self.genomeScreen[ 0 ] ) + '/' + str( len( self.ai.population.generations )-1 ) + ': ' + str( self.genomeScreen[ 1 ] ), 2, self.lg )
+        self.screen.blit( label, ( 480, 400 ) )
+
+        if self.genomeScreen[ 1 ] == -1:
+            for i in range( 0, 20 ):
+                score = self.ai.population.generations[ self.genomeScreen[ 0 ] ].genomes[ i ].score
+                label = self.fontSmall.render( str( i ) + ': ' + str( score ), 2, self.lg )
+                self.screen.blit( label, ( 480+150*int(i/10), 450+15*(i%10) ) )
+        else:
+            genome = str( self.ai.population.generations[ self.genomeScreen[ 0 ] ].genomes[ self.genomeScreen[ 1 ] ] ).split( '\n' )
+            i = 0
+            for line in genome:
+                if line != '':
+                    label = self.fontSmall.render( str( line ), 2, self.lg )
+                    self.screen.blit( label, ( 480, 450+15*i ) )
+                    i += 1
 
 
     def eventCheck( self ):
@@ -157,6 +179,23 @@ class ViewController( object ):
                     self.time.incSpeed( )
                 if event.key == gui.K_o:
                     self.time.decSpeed( )
+            if event.type == gui.MOUSEBUTTONUP:
+                if event.button == 1:
+                    if gui.Rect( 480, 630, 101, 30 ).collidepoint( event.pos ):
+                        self.infoMode = 0
+                    if gui.Rect( 580, 630, 101, 30 ).collidepoint( event.pos ):
+                        self.infoMode = 1
+                    if gui.Rect( 680, 630, 101, 30 ).collidepoint( event.pos ):
+                        self.infoMode = 2
+                    if self.infoMode == 1:
+                        if gui.Rect( 630, 405, 39, 30 ).collidepoint( event.pos ):
+                            self.genomeScreen[ 0 ] = max( 0, self.genomeScreen[ 0 ]-1 )
+                        if gui.Rect( 668, 405, 39, 30 ).collidepoint( event.pos ):
+                            self.genomeScreen[ 0 ] = min( len( self.ai.population.generations )-1, self.genomeScreen[ 0 ]+1 )
+                        if gui.Rect( 706, 405, 39, 30 ).collidepoint( event.pos ):
+                            self.genomeScreen[ 1 ] = max( -1, self.genomeScreen[ 1 ]-1 )
+                        if gui.Rect( 744, 405, 39, 30 ).collidepoint( event.pos ):
+                            self.genomeScreen[ 1 ] = min( 19, self.genomeScreen[ 1 ]+1 )
 
     def updateEverything( self ):
         self.eventCheck( )
@@ -165,5 +204,10 @@ class ViewController( object ):
         self.updateStatic( )
         self.updateGrid( )
         self.updateGameScreen( )
-        self.updateAiScreen( )
+        if self.infoMode == 0:
+            self.updateGeneralScreen( )
+        if self.infoMode == 1:
+            self.updateGenomeScreen( )
+        if self.infoMode == 2:
+            pass
         gui.display.flip( )

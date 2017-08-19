@@ -23,16 +23,17 @@ class Genome( object ):
         self.score                = 0
 
     def __str__( self ):
-        output  = '\n\nIdentifier: ' + str( self.identifier ) + '\nGeneration: ' + str( self.generation )
-        output += '\nMum       : ' + str( self.mum )
-        output += '\nDad       : ' + str( self.dad )
-        output += '\n -weightRowsCleared    : ' + str( self.weightRowsCleared    )
-        output += '\n -weightMaxHeight      : ' + str( self.weightMaxHeight      )
-        output += '\n -weightSumHeight      : ' + str( self.weightSumHeight      )
-        output += '\n -weightRelativeHeight : ' + str( self.weightRelativeHeight )
-        output += '\n -weightAmountHoles    : ' + str( self.weightAmountHoles    )
-        output += '\n -weightRoughness      : ' + str( self.weightRoughness      )
-        return output + '\n\n'
+        output  =   'Score      : ' + str( self.score      )
+        output += '\nIdentifier : ' + str( self.identifier )
+        output += '\nMum        : ' + str( self.mum        )
+        output += '\nDad        : ' + str( self.dad        )
+        output += '\n -wRowsCleared    : %0.10f' % self.weightRowsCleared
+        output += '\n -wMaxHeight      : %0.10f' % self.weightMaxHeight
+        output += '\n -wSumHeight      : %0.10f' % self.weightSumHeight
+        output += '\n -wRelativeHeight : %0.10f' % self.weightRelativeHeight
+        output += '\n -wAmountHoles    : %0.10f' % self.weightAmountHoles
+        output += '\n -wRoughness      : %0.10f' % self.weightRoughness
+        return output + '\n'
 
 
     def initialGenome( self ):
