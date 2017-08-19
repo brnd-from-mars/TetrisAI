@@ -52,10 +52,11 @@ class AI( object ):
 
         if gameover:
             self.population.generations[ self.currentGeneration ].genomes[ self.currentGenome ].score = self.score.getScore( )
-            if self.currentGenome == 2:
+            if self.currentGenome == 19:
                 self.currentGenome = 0
-                print(self.population.generations[ self.currentGeneration ])
-                #self.currentGeneration += 1
+                print( self.population.generations[ self.currentGeneration ] )
+                self.population.nextGen( )
+                self.currentGeneration += 1
             else:
                 self.currentGenome += 1
 

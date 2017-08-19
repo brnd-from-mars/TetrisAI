@@ -9,6 +9,7 @@ class Generation( object ):
     def __init__( self, generation ):
         self.generation = generation
         self.genomes = []
+        self.elite = []
         for i in range( 20 ):
             self.genomes.append( genome.Genome( self.generation ) )
 
