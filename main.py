@@ -6,6 +6,8 @@ import scoreController
 import gridController
 import tileController
 
+import grapher
+
 import ai
 
 import viewController
@@ -16,9 +18,11 @@ scoreController = scoreController.ScoreController( )
 gridController = gridController.GridController( scoreController )
 tileController = tileController.TileController( gridController )
 
-ai = ai.AI( gridController, scoreController )
+grapher = grapher.Grapher( scoreController )
 
-viewController = viewController.ViewController( gridController, timeController, scoreController, ai )
+ai = ai.AI( gridController, scoreController, grapher )
+
+viewController = viewController.ViewController( gridController, timeController, scoreController, ai, grapher )
 
 
 cTile = tileController.getRandomTile( )

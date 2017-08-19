@@ -7,12 +7,13 @@ import numpy as np
 
 class AI( object ):
 
-    def __init__( self, grid, score ):
+    def __init__( self, grid, score, grapher ):
         self.grid = grid
         self.score = score
         self.population = population.Population( )
         self.currentGeneration = 0
         self.currentGenome = 0
+        self.grapher = grapher
         self.backupGrid = np.zeros( [ 10, 20 ], dtype=np.uint8 )
         self.backupTile = [ 0, 0, 0 ]
 
@@ -52,9 +53,9 @@ class AI( object ):
 
         if gameover:
             self.population.generations[ self.currentGeneration ].genomes[ self.currentGenome ].score = self.score.getScore( )
-            if self.currentGenome == 19:
+            if self.currentGenome == 39:
+                self.grapher.appendDataSet( [ x.score for x in self.population.generations[ self.currentGeneration ].genomes ] )
                 self.currentGenome = 0
-                print( self.population.generations[ self.currentGeneration ] )
                 self.population.nextGen( )
                 self.currentGeneration += 1
             else:

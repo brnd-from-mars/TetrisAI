@@ -19,7 +19,7 @@ class ViewController( object ):
     lg = ( 112, 108,  90 )
     colors = [ dk, rd, pk, bl, yw, gn, cy, og ]
 
-    def __init__( self, grid, time, score, ai ):
+    def __init__( self, grid, time, score, ai, grapher ):
 
         try:
             os.environ['SDL_VIDEO_WINDOW_POS'] = '10,50'
@@ -29,11 +29,12 @@ class ViewController( object ):
         self.time = time
         self.score = score
         self.ai = ai
+        self.grapher = grapher
         self.abort = False
         self.update = True
         self.infoMode = 0
         self.genomeScreen = [ 0, -1 ]
-        gui.init( )
+        #gui.init( )
         self.screen = gui.display.set_mode( ( 820,720 ) )
         self.fontBold = gui.font.Font( 'font/texgyrecursor-bold.otf', 60 )
         self.fontRegular = gui.font.Font( 'font/texgyrecursor-regular.otf', 30 )
@@ -142,10 +143,13 @@ class ViewController( object ):
         self.screen.blit( label, ( 480, 400 ) )
 
         if self.genomeScreen[ 1 ] == -1:
-            for i in range( 0, 20 ):
+            for i in range( 10 ):
+                label = self.fontSmall.render( '%d:' % i, 2, self.lg )
+                self.screen.blit( label, ( 445, 450+15*i ) )
+            for i in range( 40 ):
                 score = self.ai.population.generations[ self.genomeScreen[ 0 ] ].genomes[ i ].score
-                label = self.fontSmall.render( str( i ) + ': ' + str( score ), 2, self.lg )
-                self.screen.blit( label, ( 480+150*int(i/10), 450+15*(i%10) ) )
+                label = self.fontSmall.render( str( score ), 2, self.lg )
+                self.screen.blit( label, ( 480+75*int(i/10), 450+15*(i%10) ) )
         else:
             genome = str( self.ai.population.generations[ self.genomeScreen[ 0 ] ].genomes[ self.genomeScreen[ 1 ] ] ).split( '\n' )
             i = 0
@@ -154,6 +158,9 @@ class ViewController( object ):
                     label = self.fontSmall.render( str( line ), 2, self.lg )
                     self.screen.blit( label, ( 480, 450+15*i ) )
                     i += 1
+
+    def updateGraphScreen( self ):
+        self.screen.blit( self.grapher.lastGraph, (480, 400) )
 
 
     def eventCheck( self ):
@@ -195,7 +202,7 @@ class ViewController( object ):
                         if gui.Rect( 706, 405, 39, 30 ).collidepoint( event.pos ):
                             self.genomeScreen[ 1 ] = max( -1, self.genomeScreen[ 1 ]-1 )
                         if gui.Rect( 744, 405, 39, 30 ).collidepoint( event.pos ):
-                            self.genomeScreen[ 1 ] = min( 19, self.genomeScreen[ 1 ]+1 )
+                            self.genomeScreen[ 1 ] = min( 39, self.genomeScreen[ 1 ]+1 )
 
     def updateEverything( self ):
         self.eventCheck( )
@@ -209,5 +216,5 @@ class ViewController( object ):
         if self.infoMode == 1:
             self.updateGenomeScreen( )
         if self.infoMode == 2:
-            pass
+            self.updateGraphScreen( )
         gui.display.flip( )
