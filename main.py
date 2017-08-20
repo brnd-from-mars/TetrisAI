@@ -32,7 +32,8 @@ viewController.setTile( cTile, nTile )
 
 while not viewController.abort:
     if timeController.timeEvent( ):
-        move, rotate, rating =  ai.makeMove( cTile )
+        if viewController.aiState:
+            move, rotate, rating =  ai.makeMove( cTile )
         if not cTile.incY( ):
             cTile.apply( )
             if not gridController.checkForGameOver( ):

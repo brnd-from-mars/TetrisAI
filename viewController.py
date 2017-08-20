@@ -34,6 +34,7 @@ class ViewController( object ):
         self.update = True
         self.infoMode = 0
         self.genomeScreen = [ 0, -1 ]
+        self.aiState = False
         #gui.init( )
         self.screen = gui.display.set_mode( ( 820,720 ) )
         self.fontBold = gui.font.Font( 'font/texgyrecursor-bold.otf', 60 )
@@ -139,7 +140,7 @@ class ViewController( object ):
         gui.draw.rect( self.screen, self.lg, gui.Rect( 706, 405, 39, 30 ), 1 )
         gui.draw.rect( self.screen, self.lg, gui.Rect( 744, 405, 39, 30 ), 1 )
 
-        label = self.fontRegular.render( str( self.genomeScreen[ 0 ] ) + '/' + str( len( self.ai.population.generations )-1 ) + ': ' + str( self.genomeScreen[ 1 ] ), 2, self.lg )
+        label = self.fontSmall.render( str( self.genomeScreen[ 0 ] ) + '/' + str( len( self.ai.population.generations )-1 ) + ': ' + str( self.genomeScreen[ 1 ] ), 2, self.lg )
         self.screen.blit( label, ( 480, 400 ) )
 
         if self.genomeScreen[ 1 ] == -1:
@@ -186,6 +187,8 @@ class ViewController( object ):
                     self.time.incSpeed( )
                 if event.key == gui.K_o:
                     self.time.decSpeed( )
+                if event.key == gui.K_a:
+                    self.aiState = not self.aiState
             if event.type == gui.MOUSEBUTTONUP:
                 if event.button == 1:
                     if gui.Rect( 480, 630, 101, 30 ).collidepoint( event.pos ):
