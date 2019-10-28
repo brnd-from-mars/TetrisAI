@@ -24,6 +24,8 @@ ai = ai.AI( gridController, scoreController, grapher )
 
 viewController = viewController.ViewController( gridController, timeController, scoreController, ai, grapher )
 
+print(42)
+
 
 cTile = tileController.getRandomTile( )
 nTile = tileController.getRandomTile( )
