@@ -29,7 +29,7 @@ cTile = tileController.getRandomTile( )
 nTile = tileController.getRandomTile( )
 viewController.setTile( cTile, nTile )
 
-
+print("Hello World!")
 while not viewController.abort:
     if timeController.timeEvent( ):
         if viewController.aiState:
